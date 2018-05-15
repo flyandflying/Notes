@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Nebulas Note</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=1190">
+    <link rel="stylesheet" type="text/css" href="skin/css/public/base.css">
+</head>
+<body>
+    <header class="layout_wrap header">
+        <div class="layout_main">
+            <div class="logo">
+                <h1 title="NABULAS">
+                    <a href="index.html">
+                        <img src="skin/images/logo-b.png" alt="NABULAS"></a>
+                </h1>
+            </div>
+            <ul class="nav">
+                <li>
+                    <a href="index.html" class="selected">首页</a>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <div class="layout_wrap">
+        <div class="layout_main container" id="container">
+
+            <div class="home_pro_box">
+                <div class="pro_top">
+                    <h3>钱包</h3>
+                </div>
+                <div class="pro_main">
+
+                    <div class="security_form ucpd no_p_t">
+                        <ul>
+                            <li class="input_radius">
+                                <div class="fieldName span3"> <i>*</i>
+                                    网络切换：
+                                </div>
+                                <div class="fieldConc">
+                                    <label class="fl has_mr">
+                                        <span>主网&nbsp;</span>
+                                        <input type="radio" name="net" value="1" checked="checked" @click="switchNetwork($event,1)"></label>
+                                    <label class="fl">
+                                        <span>测试网&nbsp;</span>
+                                        <input type="radio" name="net" value="0" @click="switchNetwork($event,0)"></label>
+                                </div>
+                            </li>
+                            <li class="input_radius">
+                                <div class="fieldName span3"> <i>*</i>
+                                    钱包：
+                                </div>
+                                <div class="fieldConc">
+                                    <input id="fileSelector" name="file" type="file" value=""></div>
+                            </li>
+                            <li class="input_radius">
+                                <div class="fieldName span3">
+                                    <i>*</i>
+                                    密码：
+                                </div>
+                                <div class="fieldConc">
+                                    <input type="password" name="password" id="passphrase" placeholder="请输入密码" value=""/>    
+                                    <a href="javascript:;" class="sbtn sbtn_normal fl has_mr" @click="unlockKeyStore">解锁</a>
+                                    <!-- <span class="fl">测试钱包密码：nebulas2018</span> -->
+                                </div>
+                            </li>
+                            <template>
+                                <li class="input_radius" v-if="address">
+                                    <div class="fieldName span3">钱包地址：</div>
+                                    <div class="fieldConc">
+                                        <div class="desc">{{address}}</div>
+                                    </div>
+                                </li>
+                                <li class="input_radius" v-if="balance">
+                                    <div class="fieldName span3">余额：</div>
+                                    <div class="fieldConc">
+                                        <div class="desc text_primary">{{balance}}</div>
+                                    </div>
+                                </li>
+                            </template>
+                            <!-- <li class="input_radius">    
+                            <div class="fieldName span3">上传照片：</div>
+                            <div class="fieldConc">
+                                <div class="picList">
+                                    <div id="repairImageList"></div>
+
+                                    <div class="fileMain">
+                                        <span>&nbsp;</span>
+                                        <i></i>
+                                        <input type="file" id="uploadimage"></div>
+                                </div>
+                                <span class="msg"></span>
+                            </div>
+                        </li>
+                        -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="home_pro_box">
+            <div class="pro_top">
+                <h3>新增笔记</h3>
+            </div>
+            <div class="pro_main">
+
+                <div class="security_form ucpd no_p_t">
+                    <ul>
+                        <li class="input_radius">
+                            <div class="fieldName span3">
+                                <i>*</i>
+                                标题：
+                            </div>
+                            <div class="fieldConc">
+                                <input placeholder="请输入标题" name="title" type="text" v-model="title"></div>
+                        </li>
+                        <li class="input_radius">
+                            <div class="fieldName span3">
+                                <i>*</i>
+                                内容：
+                            </div>
+                            <div class="fieldConc">
+                                <textarea cols="30" rows="2" placeholder="请输入文章内容" v-model="content"></textarea>
+                            </div>
+                        </li>
+                        <li class="input_radius">
+                            <div class="fieldName span3">&nbsp;</div>
+                            <div class="fieldConc">
+                                <a href="javascript:;" class="sbtn sbtn_primary w4em has_mr" @click="publish">发布</a>
+                                <a href="javascript:;" class="sbtn w4em" @click="reset">重置</a>
+                            </div>
+                        </li>
+                        <template>
+                            <li class="input_radius" v-if="resultPublish">
+                                <div class="fieldName span3">结果：</div>
+                                <div class="fieldConc">
+                                    <div class="desc">{{resultPublish}}</div>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="home_pro_box">
+            <div class="pro_top">
+                <h3>所有笔记</h3>
+            </div>
+            <div class="pro_main">
+                <div class="security_form ucpd no_p_t">
+                    <ul>
+                        <li class="input_radius">
+                            <div class="fieldName span3">&nbsp;</div>
+                            <div class="fieldConc">
+                                <template>
+                                    <a href="javascript:;" class="sbtn sbtn_info w4em has_mr" @click="queryAll">刷新</a>
+                                    <span class="msg text_gray">{{btnText}}</span>
+                                </template>
+                            </div>
+                        </li>
+                        <!-- <li class="input_radius">    
+                        <div class="fieldName span3">结果：</div>
+                        <div class="fieldConc">
+                            <div class="desc"></div>
+                        </div>
+                    </li>
+                    -->
+                </ul>
+            </div>
+        </div>
+        <template>
+            <ul class="notesList" v-if="notesList.length">
+                <li v-for="(item,i) in notesList">
+                    <div class="nTitle ellipsis">{{item.title}}</div>
+                    <div class="nCont">{{item.content}}</div>
+                </li>
+            </ul>
+            <div class="no_data" v-if="!notesList.length">
+                <!-- 无数据 -->    
+                <div class="d_icon animation">
+                    <i class="type1"></i>
+                    <i class="type2"></i>
+                </div>
+                <div class="no_data_main">
+                    <p>暂无记录</p>
+                </div>
+            </div>
+        </template>
+    </div>
+    </div>
+    </div>
+    <footer class="layout_wrap footer bg_white">
+        <div class="layout_main">
+            <div class="copy_right align_center">
+                <br><br>
+                NEBULAS 星云链 Thank you for using
+                <br><br>
+            </div>
+        </div>
+    </footer>
+    <script type="text/javascript" src="skin/js/public/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="skin/js/public/vue.min.js"></script>
+    <script type="text/javascript" src="skin/js/libs/nebulas.js"></script>
+    <script type="text/javascript" src="skin/js/public/layer/layer.js"></script>
+    <script type="text/javascript" src="skin/js/public/base.js"></script>
+    <script type="text/javascript" src="skin/js/home/home.js"></script>
+</body>
+</html>
